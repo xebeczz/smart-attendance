@@ -1,0 +1,80 @@
+{
+  "generated_at": "2026-11-10T08:55:24.304258+00:00",
+  "dataset_rows": 800,
+  "train_rows": 640,
+  "test_rows": 160,
+  "label_rule": "HIGH RISK if current_percentage < 65 OR (current_percentage < 75 AND attendance_trend < -3); WARNING if current_percentage < 75 OR (current_percentage < 85 AND attendance_trend < -5); else SAFE. ~5% of labels flipped at random (seed 42) so classes are not perfectly separable.",
+  "models": {
+    "logistic_regression": {
+      "accuracy": 0.8375,
+      "precision": 0.8124,
+      "recall": 0.7538,
+      "f1": 0.7592,
+      "confusion_matrix": [
+        [
+          64,
+          2,
+          3
+        ],
+        [
+          5,
+          11,
+          14
+        ],
+        [
+          0,
+          2,
+          59
+        ]
+      ]
+    },
+    "random_forest": {
+      "accuracy": 0.95,
+      "precision": 0.9405,
+      "recall": 0.9412,
+      "f1": 0.9407,
+      "confusion_matrix": [
+        [
+          66,
+          1,
+          2
+        ],
+        [
+          1,
+          27,
+          2
+        ],
+        [
+          0,
+          2,
+          59
+        ]
+      ]
+    },
+    "knn_k5": {
+      "accuracy": 0.8375,
+      "precision": 0.8102,
+      "recall": 0.7758,
+      "f1": 0.7851,
+      "confusion_matrix": [
+        [
+          65,
+          0,
+          4
+        ],
+        [
+          2,
+          15,
+          13
+        ],
+        [
+          1,
+          6,
+          54
+        ]
+      ]
+    }
+  },
+  "best_model": "random_forest",
+  "best_f1": 0.9407
+}

@@ -1,0 +1,23 @@
+# Render (free tier, no card needed) — one web service serves the React
+# frontend AND the FastAPI backend on the same host, so the app calls /api
+# on its own origin. Free instances spin down after inactivity (first load
+# after idle can take ~30-60s) and the SQLite file is ephemeral: student
+# accounts and attendance reset when the service restarts or redeploys.
+# That is fine for a college demo; use DynamoDB (see aws/) for real data.
+services:
+  - type: web
+    name: smart-attendance
+    env: python
+    plan: free
+    buildCommand: >-
+      pip install -r backend/requirements.txt &&
+      pip install -r ml/requirements.txt &&
+      python ml/generate_dataset.py &&
+      python ml/train.py &&
+      cd frontend && npm install && npm run build && cd ..
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.12.0

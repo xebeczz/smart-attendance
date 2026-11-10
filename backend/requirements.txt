@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+PyJWT
+python-multipart
+pandas
+openpyxl
+scikit-learn
+reportlab
+email-validator
+# test-only
+pytest
+httpx
