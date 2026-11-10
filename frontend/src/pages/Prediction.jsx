@@ -56,6 +56,7 @@ export default function Prediction() {
         <div className="card">
           <h3 style={{ marginTop: 0 }}>Features used</h3>
           {pred.features ? (
+            <div className="table-wrap">
             <table>
               <tbody>
                 {Object.entries(pred.features).map(([k, v]) => (
@@ -63,6 +64,7 @@ export default function Prediction() {
                 ))}
               </tbody>
             </table>
+            </div>
           ) : (
             <p className="muted">No feature breakdown returned by the model.</p>
           )}
@@ -75,6 +77,7 @@ export default function Prediction() {
         {modelRows.length === 0 ? (
           <div className="empty">No model comparison data returned.</div>
         ) : (
+          <div className="table-wrap">
           <table>
             <thead><tr><th>Model</th><th>Details</th></tr></thead>
             <tbody>
@@ -91,6 +94,7 @@ export default function Prediction() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
         <p className="muted">Models are trained on the synthetic dataset in ml/ — see the ML honesty note in the README. No accuracy is claimed here beyond what ml/evaluation.json reports.</p>
       </div>

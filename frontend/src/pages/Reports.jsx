@@ -55,6 +55,7 @@ export default function Reports() {
           </div>
           <div className="card mt">
             <h3 style={{ marginTop: 0 }}>Subject breakdown</h3>
+            <div className="table-wrap">
             <table>
               <thead><tr><th>Subject</th><th>Conducted</th><th>Attended</th><th>Absent</th><th>%</th></tr></thead>
               <tbody>
@@ -69,6 +70,7 @@ export default function Reports() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       )}

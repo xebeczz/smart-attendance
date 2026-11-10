@@ -114,6 +114,7 @@ export default function Upload() {
                 </div>
               )}
               {result.preview && result.preview.length > 0 && (
+                <div className="table-wrap">
                 <table>
                   <thead><tr><th>Subject</th><th>Conducted</th><th>Attended</th></tr></thead>
                   <tbody>
@@ -124,6 +125,7 @@ export default function Upload() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               )}
             </div>
           )}
@@ -150,6 +152,7 @@ export default function Upload() {
         ) : subjects.length === 0 ? (
           <div className="empty">No subjects yet — upload a file or add one manually above.</div>
         ) : (
+          <div className="table-wrap">
           <table>
             <thead><tr><th>Subject</th><th>Conducted</th><th>Attended</th><th>%</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody>
@@ -183,6 +186,7 @@ export default function Upload() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

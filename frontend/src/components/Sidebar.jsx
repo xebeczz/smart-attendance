@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../api.js'
 
@@ -14,16 +15,33 @@ const LINKS = [
 
 export default function Sidebar() {
   const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
   const handleLogout = () => {
     logout()
     navigate('/login')
   }
   return (
     <aside className="sidebar">
-      <div className="brand">✅ Smart Attendance</div>
-      <nav>
+      <div className="brand-row">
+        <div className="brand">✅ Smart Attendance</div>
+        <button
+          className="menu-btn"
+          type="button"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? '✕' : '☰ Menu'}
+        </button>
+      </div>
+      <nav className={open ? 'open' : ''}>
         {LINKS.map((l) => (
-          <NavLink key={l.to} to={l.to} className={({ isActive }) => (isActive ? 'active' : '')}>
+          <NavLink
+            key={l.to}
+            to={l.to}
+            onClick={() => setOpen(false)}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
             {l.label}
           </NavLink>
         ))}

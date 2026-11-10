@@ -46,6 +46,7 @@ export default function WhatIf() {
           {data.scenarios && data.scenarios.length > 0 && (
             <div className="card mt">
               <h3 style={{ marginTop: 0 }}>All targets at a glance</h3>
+              <div className="table-wrap">
               <table>
                 <thead><tr><th>Target %</th><th>Classes to attend</th><th>Classes you can miss</th></tr></thead>
                 <tbody>
@@ -58,6 +59,7 @@ export default function WhatIf() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </>

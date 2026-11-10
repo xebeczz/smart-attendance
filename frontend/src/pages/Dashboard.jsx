@@ -68,6 +68,7 @@ export default function Dashboard() {
 
           <div className="card mt">
             <h3 style={{ marginTop: 0 }}>Recent subjects</h3>
+            <div className="table-wrap">
             <table>
               <thead>
                 <tr><th>Subject</th><th>Conducted</th><th>Attended</th><th>Absent</th><th>%</th><th>Status</th></tr>
@@ -85,6 +86,7 @@ export default function Dashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
             <div className="mt"><Link to="/subjects">View all subjects →</Link></div>
           </div>
         </>
