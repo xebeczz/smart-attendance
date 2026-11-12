@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [summary, setSummary] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [sampleLoading, setSampleLoading] = useState(false)
 
   useEffect(() => {
     api.get('/attendance/summary')
@@ -16,6 +17,19 @@ export default function Dashboard() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
+
+  const loadSample = async () => {
+    setError('')
+    setSampleLoading(true)
+    try {
+      await api.post('/attendance/sample')
+      setSummary(await api.get('/attendance/summary'))
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSampleLoading(false)
+    }
+  }
 
   if (loading) return <div className="loading">Loading your attendance…</div>
   if (error) return <div className="error">{error}</div>
@@ -53,6 +67,12 @@ export default function Dashboard() {
         <div className="card mt">
           <div className="empty">
             No subjects yet. <Link to="/upload">Upload your attendance file</Link> or add subjects manually to get started.
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+            <button onClick={loadSample} disabled={sampleLoading}>
+              {sampleLoading ? 'Loading…' : 'Load sample data'}
+            </button>
+            <p className="muted">Adds 8 sample subjects (Maths, Physics, Python…) so you can see the dashboard, charts and prediction in action.</p>
           </div>
         </div>
       ) : (

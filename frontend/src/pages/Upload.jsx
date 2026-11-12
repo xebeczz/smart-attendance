@@ -9,6 +9,7 @@ export default function Upload() {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [sampleLoading, setSampleLoading] = useState(false)
   const [listLoading, setListLoading] = useState(true)
   const [manual, setManual] = useState({ subject_name: '', total_classes: '', attended: '' })
   const [editing, setEditing] = useState(null) // {id, subject_name, total_classes, attended}
@@ -35,6 +36,20 @@ export default function Upload() {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadSample = async () => {
+    setError(''); setMessage('')
+    setSampleLoading(true)
+    try {
+      const data = await api.post('/attendance/sample')
+      setMessage(`Sample data loaded: ${data.saved ?? 0} new subjects added.`)
+      loadSubjects()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSampleLoading(false)
     }
   }
 
@@ -150,7 +165,15 @@ export default function Upload() {
         {listLoading ? (
           <div className="loading">Loading subjects…</div>
         ) : subjects.length === 0 ? (
-          <div className="empty">No subjects yet — upload a file or add one manually above.</div>
+          <div className="empty">
+            No subjects yet — upload a file or add one manually above.
+            <div className="mt">
+              <button onClick={loadSample} disabled={sampleLoading}>
+                {sampleLoading ? 'Loading…' : 'Load sample data'}
+              </button>
+              <p className="muted">Adds the same 8 sample subjects used in the demo file.</p>
+            </div>
+          </div>
         ) : (
           <div className="table-wrap">
           <table>

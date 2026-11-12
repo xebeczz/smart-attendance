@@ -179,6 +179,37 @@ def manual_entry(payload: SubjectInput,
     return subject_view(subject)
 
 
+# The same 8 subjects as data/sample_attendance.csv — one tap fills an
+# empty account so the dashboard, charts and prediction can be tried
+# without finding a file first. Safe to tap twice: subjects that already
+# exist for this student are updated in place, not duplicated.
+SAMPLE_SUBJECTS = [
+    ("Mathematics", 60, 45),
+    ("Physics", 55, 40),
+    ("Programming in Python", 60, 46),
+    ("Data Structures", 58, 42),
+    ("DBMS", 52, 39),
+    ("Operating Systems", 50, 36),
+    ("English", 40, 32),
+    ("Machine Learning", 55, 40),
+]
+
+
+@app.post("/api/attendance/sample", status_code=201)
+def load_sample_data(user: dict = Depends(get_current_user)):
+    saved = updated = 0
+    for name, total, attended in SAMPLE_SUBJECTS:
+        _subject, created = database.upsert_subject(
+            user["id"], name, total, attended)
+        if created:
+            saved += 1
+        else:
+            updated += 1
+    return {"saved": saved, "updated": updated,
+            "message": f"Sample data loaded: {saved} new, "
+                       f"{updated} already present."}
+
+
 @app.put("/api/attendance/subjects/{subject_id}")
 def update_subject(subject_id: int, payload: SubjectUpdate,
                    user: dict = Depends(get_current_user)):
