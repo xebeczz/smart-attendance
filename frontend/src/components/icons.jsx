@@ -110,6 +110,52 @@ export function IconDownload(props) {
   )
 }
 
+export function IconSearch(props) {
+  return (
+    <Svg {...props}>
+      <circle cx="11" cy="11" r="7" />
+      <line x1="20" y1="20" x2="16.5" y2="16.5" />
+    </Svg>
+  )
+}
+
+export function IconBell(props) {
+  return (
+    <Svg {...props}>
+      <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+    </Svg>
+  )
+}
+
+export function IconCalendar(props) {
+  return (
+    <Svg {...props}>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="8" y1="3" x2="8" y2="7" />
+      <line x1="16" y1="3" x2="16" y2="7" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </Svg>
+  )
+}
+
+export function IconCheck(props) {
+  return (
+    <Svg {...props}>
+      <polyline points="20 6 9 17 4 12" />
+    </Svg>
+  )
+}
+
+export function IconX(props) {
+  return (
+    <Svg {...props}>
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </Svg>
+  )
+}
+
 export function IconSun(props) {
   return (
     <Svg {...props}>

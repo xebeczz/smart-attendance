@@ -9,7 +9,7 @@ def test_template_download(client, make_user):
     lines = r.text.strip().splitlines()
     assert lines[0] == "subject,total_classes,attended"
     assert len(lines) == 9  # header + 8 sample subjects
-    assert lines[1].startswith("Mathematics,60,45")
+    assert lines[1].startswith("Data Structures,60,45")
 
 
 def test_template_needs_login(client):

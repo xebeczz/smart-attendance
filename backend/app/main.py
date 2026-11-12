@@ -184,14 +184,14 @@ def manual_entry(payload: SubjectInput,
 # without finding a file first. Safe to tap twice: subjects that already
 # exist for this student are updated in place, not duplicated.
 SAMPLE_SUBJECTS = [
-    ("Mathematics", 60, 45),
-    ("Physics", 55, 40),
-    ("Programming in Python", 60, 46),
-    ("Data Structures", 58, 42),
-    ("DBMS", 52, 39),
+    ("Data Structures", 60, 45),
+    ("DBMS", 50, 36),
+    ("Machine Learning", 60, 48),
     ("Operating Systems", 50, 36),
-    ("English", 40, 32),
-    ("Machine Learning", 55, 40),
+    ("Probability & Statistics", 60, 45),
+    ("Python Programming", 50, 36),
+    ("Computer Networks", 50, 36),
+    ("Software Engineering", 50, 38),
 ]
 
 

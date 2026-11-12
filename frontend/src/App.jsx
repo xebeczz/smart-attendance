@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Sidebar from './components/Sidebar.jsx'
-import { IconMoon, IconSun } from './components/icons.jsx'
+import ThemeToggle from './components/ThemeToggle.jsx'
 import { getToken } from './api.js'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
@@ -21,37 +20,21 @@ function RequireAuth({ children }) {
   return children
 }
 
-function ThemeToggle() {
-  const [theme, setTheme] = useState(
-    document.documentElement.getAttribute('data-theme') || 'light'
-  )
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-    localStorage.setItem('sa_theme', theme)
-  }, [theme])
-  useEffect(() => {
-    const saved = localStorage.getItem('sa_theme')
-    if (saved) setTheme(saved)
-  }, [])
-  return (
-    <button
-      className="theme-toggle small"
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-    >
-      {theme === 'light' ? (<><IconMoon size={15} /> Dark</>) : (<><IconSun size={15} /> Light</>)}
-    </button>
-  )
-}
-
 function Layout({ children }) {
+  const location = useLocation()
+  // The dashboard renders its own header (title, search, bell, dark
+  // toggle), so the shared page-head is only shown on other pages.
+  const isDashboard = location.pathname === '/dashboard'
   return (
     <div className="app-layout">
       <Sidebar />
       <main className="main">
-        <div className="page-head">
-          <span />
-          <ThemeToggle />
-        </div>
+        {!isDashboard && (
+          <div className="page-head">
+            <span />
+            <ThemeToggle />
+          </div>
+        )}
         {children}
       </main>
     </div>
@@ -70,7 +53,8 @@ export default function App() {
       <Route path="/subjects" element={<RequireAuth><Layout><Subjects /></Layout></RequireAuth>} />
       <Route path="/analytics" element={<RequireAuth><Layout><Analytics /></Layout></RequireAuth>} />
       <Route path="/prediction" element={<RequireAuth><Layout><Prediction /></Layout></RequireAuth>} />
-      <Route path="/what-if" element={<RequireAuth><Layout><WhatIf /></Layout></RequireAuth>} />
+      <Route path="/planner" element={<RequireAuth><Layout><WhatIf /></Layout></RequireAuth>} />
+      <Route path="/what-if" element={<Navigate to="/planner" replace />} />
       <Route path="/profile" element={<RequireAuth><Layout><Profile /></Layout></RequireAuth>} />
       <Route path="/reports" element={<RequireAuth><Layout><Reports /></Layout></RequireAuth>} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
