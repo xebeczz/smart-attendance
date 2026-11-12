@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Sidebar from './components/Sidebar.jsx'
+import { IconMoon, IconSun } from './components/icons.jsx'
 import { getToken } from './api.js'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
@@ -37,7 +38,7 @@ function ThemeToggle() {
       className="theme-toggle small"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
     >
-      {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      {theme === 'light' ? (<><IconMoon size={15} /> Dark</>) : (<><IconSun size={15} /> Light</>)}
     </button>
   )
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api, setToken } from '../api.js'
+import { LogoMark } from '../components/icons.jsx'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -26,7 +27,7 @@ export default function Login() {
 
   return (
     <div className="form-narrow">
-      <h1>✅ Smart Attendance</h1>
+      <h1><LogoMark /> Smart Attendance</h1>
       <p className="muted" style={{ textAlign: 'center' }}>Log in to check your attendance risk.</p>
       <div className="card">
         <form onSubmit={submit}>

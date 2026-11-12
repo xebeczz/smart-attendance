@@ -1,16 +1,29 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../api.js'
+import {
+  IconAnalytics,
+  IconClose,
+  IconDashboard,
+  IconMenu,
+  IconPrediction,
+  IconProfile,
+  IconReports,
+  IconSubjects,
+  IconUpload,
+  IconWhatIf,
+  LogoMark
+} from './icons.jsx'
 
 const LINKS = [
-  { to: '/dashboard', label: '📊 Dashboard' },
-  { to: '/upload', label: '📤 Upload Attendance' },
-  { to: '/subjects', label: '📚 Subjects' },
-  { to: '/analytics', label: '📈 Analytics' },
-  { to: '/prediction', label: '🤖 AI Prediction' },
-  { to: '/what-if', label: '🔮 What-If Planner' },
-  { to: '/reports', label: '📄 Reports' },
-  { to: '/profile', label: '👤 Profile' }
+  { to: '/dashboard', label: 'Dashboard', Icon: IconDashboard },
+  { to: '/upload', label: 'Upload Attendance', Icon: IconUpload },
+  { to: '/subjects', label: 'Subjects', Icon: IconSubjects },
+  { to: '/analytics', label: 'Analytics', Icon: IconAnalytics },
+  { to: '/prediction', label: 'AI Prediction', Icon: IconPrediction },
+  { to: '/what-if', label: 'What-If Planner', Icon: IconWhatIf },
+  { to: '/reports', label: 'Reports', Icon: IconReports },
+  { to: '/profile', label: 'Profile', Icon: IconProfile }
 ]
 
 export default function Sidebar() {
@@ -23,7 +36,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand-row">
-        <div className="brand">✅ Smart Attendance</div>
+        <div className="brand"><LogoMark /> Smart Attendance</div>
         <button
           className="menu-btn"
           type="button"
@@ -31,7 +44,8 @@ export default function Sidebar() {
           aria-expanded={open}
           onClick={() => setOpen(!open)}
         >
-          {open ? '✕' : '☰ Menu'}
+          {open ? <IconClose size={18} /> : <IconMenu size={18} />}
+          <span>{open ? 'Close' : 'Menu'}</span>
         </button>
       </div>
       <nav className={open ? 'open' : ''}>
@@ -42,7 +56,8 @@ export default function Sidebar() {
             onClick={() => setOpen(false)}
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
-            {l.label}
+            <l.Icon size={18} />
+            <span>{l.label}</span>
           </NavLink>
         ))}
       </nav>

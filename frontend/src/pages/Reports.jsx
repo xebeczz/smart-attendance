@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../api.js'
 import StatCard from '../components/StatCard.jsx'
 import RiskBadge from '../components/RiskBadge.jsx'
+import { IconDownload } from '../components/icons.jsx'
 
 export default function Reports() {
   const [summary, setSummary] = useState(null)
@@ -78,10 +79,10 @@ export default function Reports() {
         <h3 style={{ marginTop: 0 }}>Download report</h3>
         <div className="row">
           <button onClick={() => download('csv')} disabled={downloading !== ''}>
-            {downloading === 'csv' ? 'Downloading…' : '⬇ Download CSV'}
+            <IconDownload size={16} /> {downloading === 'csv' ? 'Downloading…' : 'Download CSV'}
           </button>
           <button onClick={() => download('pdf')} disabled={downloading !== ''}>
-            {downloading === 'pdf' ? 'Downloading…' : '⬇ Download PDF'}
+            <IconDownload size={16} /> {downloading === 'pdf' ? 'Downloading…' : 'Download PDF'}
           </button>
         </div>
       </div>

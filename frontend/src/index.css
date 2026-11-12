@@ -54,17 +54,24 @@ a:hover { text-decoration: underline; }
   display: flex; flex-direction: column; padding: 1rem 0;
   position: sticky; top: 0; height: 100vh;
 }
-.sidebar .brand { color: #fff; font-size: 1.15rem; font-weight: 700; padding: 0.5rem 1.25rem 1rem; }
+.sidebar .brand { color: #fff; font-size: 1.15rem; font-weight: 700; padding: 0.5rem 1.25rem 1rem; display: flex; align-items: center; gap: 0.6rem; }
+.logo-mark {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 8px; background: var(--primary); flex-shrink: 0;
+}
 .brand-row { display: flex; align-items: center; justify-content: space-between; }
 .brand-row .brand { padding: 0.5rem 0 1rem 1.25rem; }
 .menu-btn {
   display: none; background: transparent; border: 1px solid rgba(255,255,255,0.35);
   color: #fff; border-radius: 8px; padding: 0.35rem 0.7rem; font-size: 1rem;
-  margin-right: 1rem; cursor: pointer;
+  margin-right: 1rem; cursor: pointer; align-items: center; gap: 0.4rem;
 }
+/* Nav icons inherit the link colour, so they stay consistent in both themes. */
+.sidebar nav a svg { flex-shrink: 0; opacity: 0.9; }
 .sidebar nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .sidebar nav a {
-  color: var(--sidebar-text); padding: 0.65rem 1.25rem; display: block;
+  color: var(--sidebar-text); padding: 0.65rem 1.25rem;
+  display: flex; align-items: center; gap: 0.75rem;
 }
 .sidebar nav a:hover { background: rgba(255,255,255,0.08); text-decoration: none; }
 .sidebar nav a.active { background: var(--sidebar-active); color: #fff; }
@@ -97,6 +104,7 @@ input, select, textarea {
 button {
   background: var(--primary); color: #fff; border: none; border-radius: 8px;
   padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
 }
 button:hover { background: var(--primary-hover); }
 button:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -104,7 +112,7 @@ button.secondary { background: transparent; color: var(--text); border: 1px soli
 button.danger { background: var(--red); }
 button.small { padding: 0.35rem 0.7rem; font-size: 0.85rem; }
 .form-narrow { max-width: 440px; margin: 3rem auto; }
-.form-narrow h1 { text-align: center; }
+.form-narrow h1 { text-align: center; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
 .auth-links { text-align: center; margin-top: 1rem; font-size: 0.9rem; }
 
 /* ---- Tables ---- */
@@ -157,7 +165,7 @@ td .row { flex-wrap: nowrap; }
      instead of wrapping across half the screen. */
   .sidebar { width: 100%; height: auto; position: sticky; top: 0; z-index: 20; padding: 0.5rem 0; }
   .brand-row .brand { padding: 0 0 0 1rem; font-size: 1.05rem; }
-  .menu-btn { display: inline-block; }
+  .menu-btn { display: inline-flex; }
   .sidebar nav { display: none; flex-direction: column; }
   .sidebar nav.open { display: flex; }
   .sidebar nav a { padding: 0.6rem 1rem; }
