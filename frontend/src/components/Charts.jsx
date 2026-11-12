@@ -6,41 +6,98 @@ import {
   Legend,
   Pie,
   PieChart as RePieChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis
 } from 'recharts'
 
-const COLORS = ['#2563eb', '#16a34a', '#d97706', '#dc2626', '#7c3aed', '#0891b2']
+const GREEN = '#16a34a'
+const AMBER = '#d97706'
+const RED = '#dc2626'
 
-// Shorten long subject names so bar labels fit side by side instead of
-// colliding; the full name is still shown in the tooltip.
-const shortLabel = (name) => {
-  const s = String(name ?? '')
-  return s.length > 12 ? `${s.slice(0, 11)}…` : s
+export function statusColor(pct) {
+  if (pct >= 75) return GREEN
+  if (pct >= 65) return AMBER
+  return RED
 }
 
-export function BarChart({ data, xKey = 'name', yKey = 'value', height = 300 }) {
+// Wrap a long subject name onto at most two centred lines (≤12 chars
+// each) instead of truncating it or tilting it diagonally.
+function wrapLabel(name) {
+  const words = String(name ?? '').split(' ')
+  const lines = ['']
+  for (const w of words) {
+    const cur = lines[lines.length - 1]
+    if ((cur + ' ' + w).trim().length <= 12) {
+      lines[lines.length - 1] = (cur + ' ' + w).trim()
+    } else if (lines.length < 2) {
+      lines.push(w)
+    } else {
+      lines[1] = `${lines[1].slice(0, 10)}…`
+    }
+  }
+  return lines
+}
+
+function WrappedTick({ x, y, payload }) {
+  const lines = wrapLabel(payload?.value)
+  return (
+    <text x={x} y={y + 12} textAnchor="middle" fontSize={11} fill="currentColor">
+      {lines.map((line, i) => (
+        <tspan key={i} x={x} dy={i === 0 ? 0 : 12}>{line}</tspan>
+      ))}
+    </text>
+  )
+}
+
+// One tooltip line: full subject name + value, never repeated.
+function BarTooltip({ active, payload, unit }) {
+  if (!active || !payload?.length) return null
+  const p = payload[0]
+  return (
+    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}>
+      <strong>{p.payload?.name}</strong>: {p.value}
+      {unit}
+    </div>
+  )
+}
+
+export function BarChart({
+  data,
+  xKey = 'name',
+  yKey = 'value',
+  height = 300,
+  colorByStatus = false,
+  showTarget = false,
+  target = 75,
+  unit = '%',
+  yDomain = [0, 100]
+}) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <ReBarChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey={xKey}
-          tick={{ fontSize: 11 }}
-          tickFormatter={shortLabel}
-          angle={-30}
-          textAnchor="end"
-          height={60}
+          tick={<WrappedTick />}
+          height={52}
           interval={0}
         />
-        <YAxis domain={[0, 100]} width={32} tick={{ fontSize: 11 }} />
-        <Tooltip formatter={(value, name, props) => [value, props?.payload?.[xKey] ?? name]} />
-        <Legend wrapperStyle={{ fontSize: 12 }} />
+        <YAxis domain={yDomain} width={32} tick={{ fontSize: 11 }} />
+        <Tooltip content={<BarTooltip unit={unit} />} />
+        {showTarget && (
+          <ReferenceLine
+            y={target}
+            stroke={RED}
+            strokeDasharray="5 4"
+            label={{ value: `Required ${target}%`, position: 'insideTopRight', fontSize: 11, fill: RED }}
+          />
+        )}
         <Bar dataKey={yKey} fill="#2563eb">
-          {data.map((_, i) => (
-            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+          {data.map((d, i) => (
+            <Cell key={i} fill={colorByStatus ? statusColor(Number(d[yKey] ?? 0)) : '#2563eb'} />
           ))}
         </Bar>
       </ReBarChart>
@@ -48,7 +105,9 @@ export function BarChart({ data, xKey = 'name', yKey = 'value', height = 300 }) 
   )
 }
 
-export function PieChart({ data, height = 300 }) {
+const PIE_COLORS = [GREEN, RED]
+
+export function PieChart({ data, height = 300, colors = PIE_COLORS }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RePieChart>
@@ -59,13 +118,17 @@ export function PieChart({ data, height = 300 }) {
           cx="50%"
           cy="50%"
           outerRadius="75%"
-          label={{ fontSize: 11 }}
+          label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(1)}%`}
+          labelLine
         >
           {data.map((_, i) => (
-            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+            <Cell key={i} fill={colors[i % colors.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip formatter={(value, name, props) => {
+          const total = (props?.payload?.payload?.total ?? data.reduce((a, d) => a + (d.value || 0), 0)) || 1
+          return [`${value} (${((value / total) * 100).toFixed(1)}%)`, name]
+        }} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
       </RePieChart>
     </ResponsiveContainer>

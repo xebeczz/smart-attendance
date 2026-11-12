@@ -252,6 +252,20 @@ def _parse_upload(content: bytes, filename: str) -> pd.DataFrame:
     return pd.read_excel(buf, engine="openpyxl")
 
 
+TEMPLATE_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "sample_attendance.csv"
+
+
+@app.get("/api/attendance/template")
+def download_template(user: dict = Depends(get_current_user)):
+    """The sample CSV (same 8 subjects as the Load sample data button),
+    so a student can see the exact file format before uploading."""
+    if not TEMPLATE_PATH.is_file():
+        raise HTTPException(status_code=404,
+                            detail="Sample file not available")
+    return FileResponse(TEMPLATE_PATH, media_type="text/csv",
+                        filename="sample_attendance.csv")
+
+
 @app.post("/api/attendance/upload")
 async def upload_attendance(file: UploadFile = File(...),
                             user: dict = Depends(get_current_user)):

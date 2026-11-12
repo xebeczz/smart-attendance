@@ -159,11 +159,11 @@ def predict(summary: dict) -> dict:
         "features": features,
         "recommendation": _recommendation(risk),
         "probabilities": None,
-        "note": ("No trained model found (ml/evaluation.json /"
-                 " ml/models/best_model.pkl missing), so this is a"
-                 " rule-based estimate. previous_percentage equals"
-                 " current_percentage and trend is 0 because only a"
-                 " single attendance snapshot is available."),
+        "note": ("No trained model was available, so this is a"
+                 " rule-based estimate from your attendance bands."
+                 " Previous attendance equals current attendance"
+                 " because only one attendance snapshot is"
+                 " available so far."),
     }
 
 

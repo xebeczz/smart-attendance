@@ -9,20 +9,36 @@ export default function Register() {
     department: '', year: '', section: '', password: ''
   })
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const [loading, setLoading] = useState(false)
 
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  const set = (k) => (e) => {
+    setForm({ ...form, [k]: e.target.value })
+    if (fieldErrors[k]) setFieldErrors({ ...fieldErrors, [k]: '' })
+  }
 
   const submit = async (e) => {
     e.preventDefault()
     setError('')
+    setFieldErrors({})
+    // Year must be a plain number (1–6); "3rd Year" is not accepted.
+    const year = Number(form.year)
+    if (!form.year || !Number.isInteger(year) || year < 1 || year > 6) {
+      setFieldErrors({ year: 'Enter your year as a number from 1 to 6, e.g. 3.' })
+      return
+    }
     setLoading(true)
     try {
-      const data = await api.post('/auth/register', form)
+      const data = await api.post('/auth/register', { ...form, year })
       setToken(data.access_token)
       navigate('/dashboard')
     } catch (err) {
-      setError(err.message)
+      // A server validation error mentioning "year" means the same problem.
+      if ((err.message || '').includes('year')) {
+        setFieldErrors({ year: 'Enter your year as a number from 1 to 6, e.g. 3.' })
+      } else {
+        setError(err.message)
+      }
     } finally {
       setLoading(false)
     }
@@ -43,7 +59,8 @@ export default function Register() {
           <label htmlFor="department">Department</label>
           <input id="department" value={form.department} onChange={set('department')} placeholder="e.g. AI & Data Science" required />
           <label htmlFor="year">Year</label>
-          <input id="year" value={form.year} onChange={set('year')} placeholder="e.g. 3rd Year" required />
+          <input id="year" type="number" min="1" max="6" value={form.year} onChange={set('year')} placeholder="3" required />
+          {fieldErrors.year && <div className="field-error">{fieldErrors.year}</div>}
           <label htmlFor="section">Section</label>
           <input id="section" value={form.section} onChange={set('section')} placeholder="e.g. A" required />
           <label htmlFor="password">Password</label>

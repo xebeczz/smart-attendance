@@ -3,6 +3,14 @@ import { Link } from 'react-router-dom'
 import { api } from '../api.js'
 import { BarChart, PieChart } from '../components/Charts.jsx'
 
+// Consecutive classes to attend to reach 75% for one subject.
+function classesToAttend(attended, total, target = 75) {
+  if (total <= 0) return 0
+  const pct = (attended / total) * 100
+  if (pct >= target) return 0
+  return Math.max(0, Math.ceil((target * total - 100 * attended) / (100 - target)))
+}
+
 export default function Analytics() {
   const [summary, setSummary] = useState(null)
   const [error, setError] = useState('')
@@ -28,7 +36,10 @@ export default function Analytics() {
     )
   }
 
-  const barData = subjects.map((s) => ({ name: s.subject_name, value: Number(s.percentage ?? 0) }))
+  const catchUpData = subjects.map((s) => ({
+    name: s.subject_name,
+    value: classesToAttend(s.attended ?? 0, s.total_classes ?? 0)
+  }))
   const pieData = [
     { name: 'Attended', value: summary.total_attended ?? 0 },
     { name: 'Absent', value: summary.total_absent ?? 0 }
@@ -41,12 +52,13 @@ export default function Analytics() {
       <h1>Analytics</h1>
       <div className="grid grid-2">
         <div className="card">
-          <h3 style={{ marginTop: 0 }}>Attendance % by subject</h3>
-          <BarChart data={barData} xKey="name" yKey="value" />
+          <h3 style={{ marginTop: 0 }}>Classes to attend to reach 75%</h3>
+          <BarChart data={catchUpData} xKey="name" yKey="value" unit=" classes" yDomain={[0, 'auto']} />
+          <p className="muted">How many classes in a row to attend, per subject, to get back to 75%. Subjects already at 75% or above show 0.</p>
         </div>
         <div className="card">
           <h3 style={{ marginTop: 0 }}>Attended vs absent (all subjects)</h3>
-          <PieChart data={pieData} />
+          <PieChart data={pieData} colors={['#16a34a', '#dc2626']} />
         </div>
       </div>
       <div className="card mt">
@@ -61,8 +73,7 @@ export default function Analytics() {
           attending the next classes in this subject moves your overall percentage fastest.
         </p>
         <p className="muted">
-          Trend note: this view is built from your current per-subject totals. Day-by-day trends
-          appear once you upload attendance files regularly — each upload updates these totals.
+          These numbers come from your uploaded totals. Upload your attendance again after more classes and they update from the new file.
         </p>
       </div>
     </div>

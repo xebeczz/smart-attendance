@@ -10,6 +10,7 @@ export default function Upload() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [sampleLoading, setSampleLoading] = useState(false)
+  const [dragging, setDragging] = useState(false)
   const [listLoading, setListLoading] = useState(true)
   const [manual, setManual] = useState({ subject_name: '', total_classes: '', attended: '' })
   const [editing, setEditing] = useState(null) // {id, subject_name, total_classes, attended}
@@ -36,6 +37,26 @@ export default function Upload() {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const pickFile = (f) => {
+    if (!f) return
+    const ext = (f.name.split('.').pop() || '').toLowerCase()
+    if (!['csv', 'xlsx', 'xls'].includes(ext)) {
+      setError('Only .csv and .xlsx files are accepted.')
+      return
+    }
+    setError('')
+    setFile(f)
+  }
+
+  const downloadTemplate = async () => {
+    setError('')
+    try {
+      await api.download('/attendance/template', 'sample_attendance.csv')
+    } catch (err) {
+      setError(err.message)
     }
   }
 
@@ -110,14 +131,34 @@ export default function Upload() {
           <h3 style={{ marginTop: 0 }}>Upload a file</h3>
           <p className="muted">CSV or XLSX with columns: subject_name, total_classes, attended.</p>
           <form onSubmit={uploadFile}>
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={(e) => setFile(e.target.files[0] || null)}
-            />
-            <button type="submit" disabled={loading || !file}>
-              {loading ? 'Uploading…' : 'Upload'}
-            </button>
+            <div
+              className={`dropzone${dragging ? ' dragging' : ''}`}
+              onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={(e) => { e.preventDefault(); setDragging(false); pickFile(e.dataTransfer.files[0]) }}
+              onClick={() => document.getElementById('file-input').click()}
+            >
+              <input
+                id="file-input"
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={(e) => pickFile(e.target.files[0] || null)}
+              />
+              <div>Drop your CSV or XLSX file here, or click to choose one</div>
+              {file ? (
+                <div className="file-name">{file.name}</div>
+              ) : (
+                <div className="muted">Columns: subject_name, total_classes, attended</div>
+              )}
+            </div>
+            <div className="row mt">
+              <button type="submit" disabled={loading}>
+                {loading ? 'Uploading…' : 'Upload'}
+              </button>
+              <button type="button" className="secondary" onClick={downloadTemplate}>
+                Download sample CSV
+              </button>
+            </div>
           </form>
           {result && (
             <div className="mt">
