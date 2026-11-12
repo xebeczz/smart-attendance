@@ -355,3 +355,22 @@ tr.best td:first-child { font-weight: 700; }
   .banner button { width: 100%; }
   .bar-cell { min-width: 150px; }
 }
+
+/* ---- Confirm dialog ---- */
+/* In-app replacement for window.confirm: native confirm dialogs are
+   auto-dismissed by headless/automated browsers, which silently broke
+   Delete. This modal is a normal React element, so it works everywhere.
+   Colours come from the theme variables, so dark mode follows. */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.modal {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow); padding: 1.5rem;
+  max-width: 420px; width: 100%;
+}
+.modal p { margin: 0.5rem 0 1.25rem; }

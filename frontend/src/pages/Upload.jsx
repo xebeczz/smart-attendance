@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api.js'
+import ConfirmDialog from '../components/ConfirmDialog.jsx'
 import RiskBadge from '../components/RiskBadge.jsx'
 
 export default function Upload() {
@@ -14,6 +15,7 @@ export default function Upload() {
   const [listLoading, setListLoading] = useState(true)
   const [manual, setManual] = useState({ subject_name: '', total_classes: '', attended: '' })
   const [editing, setEditing] = useState(null) // {id, subject_name, total_classes, attended}
+  const [confirming, setConfirming] = useState(null) // {id, name} awaiting delete confirmation
 
   const loadSubjects = () => {
     setListLoading(true)
@@ -109,11 +111,11 @@ export default function Upload() {
   }
 
   const deleteSubject = async (id, name) => {
-    if (!window.confirm(`Delete ${name}?`)) return
     setError(''); setMessage('')
     try {
       await api.del(`/attendance/subjects/${id}`)
       setMessage(`Deleted ${name}.`)
+      setConfirming(null)
       loadSubjects()
     } catch (err) {
       setError(err.message)
@@ -242,7 +244,7 @@ export default function Upload() {
                       <td><RiskBadge status={s.status} percentage={s.percentage} /></td>
                       <td>
                         <button className="small secondary" onClick={() => setEditing({ id: s.id, subject_name: s.subject_name, total_classes: s.total_classes, attended: s.attended })}>Edit</button>{' '}
-                        <button className="small danger" onClick={() => deleteSubject(s.id, s.subject_name)}>Delete</button>
+                        <button className="small danger" onClick={() => setConfirming({ id: s.id, name: s.subject_name })}>Delete</button>
                       </td>
                     </>
                   )}
@@ -253,6 +255,15 @@ export default function Upload() {
           </div>
         )}
       </div>
+
+      {confirming && (
+        <ConfirmDialog
+          title={`Delete ${confirming.name}?`}
+          message="This removes the subject and its attendance record. This can't be undone."
+          onConfirm={() => deleteSubject(confirming.id, confirming.name)}
+          onCancel={() => setConfirming(null)}
+        />
+      )}
     </div>
   )
 }
