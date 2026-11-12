@@ -64,10 +64,8 @@ export default function Register() {
           <label htmlFor="year">Year</label>
           <input
             id="year"
-            type="number"
-            min="1"
-            max="6"
-            step="1"
+            type="text"
+            inputMode="numeric"
             value={form.year}
             onChange={set('year')}
             placeholder="e.g. 3"
